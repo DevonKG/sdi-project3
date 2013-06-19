@@ -1,10 +1,16 @@
 var json = {
     "Items" : [
-      {  HealthPotion: +200, } ,
-      {  MagicPotion: +50,},
+      {  HealthPotion: +200} ,
+      {  MagicPotion: +50}
     ] }
-
+    
 var j2 = {
+    "ItemTotal" : [
+    { HealthPotion: 10},
+    { MagicPotion: 10}
+    ]}
+
+var j3 = {
     "HeroStats" : [
     {// Oddler
         Life: 300,
@@ -20,7 +26,7 @@ var j2 = {
         }        
     ]}
 
-var j3 = {
+var j4 = {
     "EnemyStats" : [
     {//Bat
         Life: 75,
@@ -30,7 +36,7 @@ var j3 = {
         },
     {// Ooze
         Life: 125,
-        Magic: 50,
+        Magic: 0,
         Stength: 30,
         Defence: 200
         },
