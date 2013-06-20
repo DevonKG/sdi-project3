@@ -40,14 +40,14 @@ var jsonEnemies = {
         Defence: 150
         },
     {// Ooze
-		Name: "Ooze",
+		Name: "Blue Ooze",
         Life: 125,
         Magic: 0,
         Stength: 30,
         Defence: 200
         },
     {// Ogre
-		Name: "Ogre",
+		Name: "Green Ogre",
         Life: 350,
         Magic: 0,
         Strength: 300,
