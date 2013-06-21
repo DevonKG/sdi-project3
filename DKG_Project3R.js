@@ -7,7 +7,7 @@
 //json Item
 var jsonItems = '[{"Type": "Health Potion",	"Value": 200,	"Total":10},{"Type": "Magic Potion","Value": 50,"Total": 10}]';
 
-var jsonHeroes = '[{"Name": "Oddler","Life": 100,"MaxLife" : 100, "Magic": 150,"MaxMagic": 150,"Strength": 250,"Defense": 200},{"Name": "Mazy","Life": 200,"LifeMax" : 200,"Magic": 300,"MaxMagic": 300,"Strength": 120,"Defense": 175}]';
+var jsonHeroes = '[{"Name": "Oddler","Life": 225,"MaxLife" : 225, "Magic": 150,"MaxMagic": 150,"Strength": 250,"Defense": 200},{"Name": "Mazy","Life": 200,"LifeMax" : 200,"Magic": 300,"MaxMagic": 300,"Strength": 120,"Defense": 175}]';
 
 
 var jsonEnemies = '[{"Name": "Bat","Life": 75,"Magic": 0,"Strength": 35,"Defense": 150},{"Name": "Blue Ooze","Life": 125,"Magic": 0, "Strength": 30,"Defense": 200}, {"Name": "Green Ogre","Life": 350,"Magic": 0,"Strength": 300,"Defense": 100}]';
@@ -28,7 +28,7 @@ var Bat = objEnemies[0];
 var Ooze = objEnemies[1];
 var Ogre = objEnemies[2];
 
-var OddlerLifeThreshold = Oddler.Life *0.9;
+var OddlerLifeThreshold = Oddler.Life *0.5;
 var MazyLifeThreshold = Mazy.Life * 0.5;
 var mazyManaThreshold = Mazy.Magic * 0.1;
 
@@ -37,6 +37,12 @@ var healAmount = (parseInt(Math.random()*50)+25);
 var OddlerWins = true;
 
 //FUNCTIONS
+var StoryString = "Oddler has chosen to battle Lith, and bought his supplies. \n Mazy, a healer has joined Oddlers party. \n Oddler sets out on his journey. \n "
+function ReportStory(StoryString)
+{
+    return StoryString;
+}
+
 
 //Use Heath Potions
 function UseHealthPotion(target) {
@@ -126,6 +132,18 @@ function WillMazyHeal()
 	}
 }
  
+function SelectTarget()
+{
+	if (parseInt(Math.random()*2)%2==0)
+	{
+		return Oddler;
+	}
+	else
+	{
+		return Mazy;
+	}
+}
+ 
 function BattlePhase()
 {
 	for(var i=0; i<3; i++)
@@ -139,9 +157,11 @@ function BattlePhase()
 			
 			if(EnemyCreature[0].Life>0)
 			{
+
 				console.log(EnemyCreature[0].Name + " has " + EnemyCreature[0].Life + " life remaining.");
-				console.log(EnemyCreature[0].Name + " attacks for " + Attack(Oddler,10,20,30) + " damage.");
-				console.log("Oddler has " + Oddler.Life + " life remaining.");
+				var CurrentTarget = SelectTarget();
+				console.log(EnemyCreature[0].Name + " attacks " + CurrentTarget.Name + " for " + Attack(CurrentTarget,10,20,30) + " damage.");
+				console.log(CurrentTarget.Name + " has " + CurrentTarget.Life + " life remaining.");
 				if (Oddler.Life <=0)
 				{
 					OddlerWins = false;
@@ -166,8 +186,8 @@ function BattlePhase()
 			console.log("\n\n");
 	}
 }
+        console.log(ReportStory(StoryString));
         BuildEnemyArray();
 	BattlePhase();
 	console.log("\n\n");
 	ReportOutcome();
-	
