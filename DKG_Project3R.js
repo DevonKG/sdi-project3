@@ -7,7 +7,7 @@
 //json Item
 var jsonItems = '[{"Type": "Health Potion",	"Value": 200,	"Total":10},{"Type": "Magic Potion","Value": 50,"Total": 10}]';
 
-var jsonHeroes = '[{"Name": "Oddler","Life": 300,"MaxLife" : 300, "Magic": 150,"MaxMagic": 150,"Strength": 250,"Defense": 200},{"Name": "Mazy","Life": 200,"LifeMax" : 200,"Magic": 300,"MaxMagic": 300,"Strength": 120,"Defense": 175}]';
+var jsonHeroes = '[{"Name": "Oddler","Life": 100,"MaxLife" : 100, "Magic": 150,"MaxMagic": 150,"Strength": 250,"Defense": 200},{"Name": "Mazy","Life": 200,"LifeMax" : 200,"Magic": 300,"MaxMagic": 300,"Strength": 120,"Defense": 175}]';
 
 
 var jsonEnemies = '[{"Name": "Bat","Life": 75,"Magic": 0,"Strength": 35,"Defense": 150},{"Name": "Blue Ooze","Life": 125,"Magic": 0, "Strength": 30,"Defense": 200}, {"Name": "Green Ogre","Life": 350,"Magic": 0,"Strength": 300,"Defense": 100}]';
@@ -33,6 +33,8 @@ var MazyLifeThreshold = Mazy.Life * 0.5;
 var mazyManaThreshold = Mazy.Magic * 0.1;
 
 var healAmount = (parseInt(Math.random()*50)+25);
+
+var OddlerWins = true;
 
 //FUNCTIONS
 
@@ -87,26 +89,85 @@ function CastHealSpell(target,healValue) {
 	return healValue;
 }
 
-//Cast Fireball Spell - Specify Caster, Target Enemy and damage amount
-function CastFireBallSpell(caster,target,dmgAmount) {
-	var spellCost = 35;
-	target.Life-=dmgAmount;
-	caster.Magic-=spellCost
-}
-
-//Attack a target - Specify Target and Damage Amount. Weighs against targets Strength and Defense stats. Formula including Random range indicates damage based on damage amount specified. RETURNS A NUMBER
+//Attack a target, returns a number
 function Attack(target, low, high, dmgAmount) {
 	var lowerLimit = low;
 	var upperLimit = high;
 	//following command is the formula for calculating damage.
-	//total damage is calculated by:
-	//absolute value of strength of target subtract defense of target (eliminates negative value)
-	//multiplied by a random value indicated by lowerLimit and upperLimit values, plus one to eliminate zero.
-	//Divide by 100 to get a percentage value, add dmgAmount as a bonus damage amount. 
-	//parseInt() to return ONLY the integer value
+
 	var totalDamage =parseInt(((Math.abs(target.Strength - target.Defense)) * ((Math.floor(Math.random() * upperLimit - lowerLimit + 1) + lowerLimit)/100)+dmgAmount));
 	
 	target.Life -= totalDamage;
 	return totalDamage;
 }
 creatureToFight = parseInt((Math.random()*3)+1);//Random Creature:
+
+var EnemyCreature = [];
+function BuildEnemyArray()
+{
+	EnemyCreature.push(Bat);
+	EnemyCreature.push(Ooze);
+	EnemyCreature.push(Ogre);
+	return EnemyCreature;
+}
+
+function WillMazyHeal()
+{
+    return (parseInt(Math.random()*2)%2==0);
+ }
+ 
+ function ReportOutcome()
+ {
+	if(OddlerWins)
+ 	{
+		console.log("You Win!!");
+	} else {
+		console.log("You Lose.");
+	}
+}
+ 
+function BattlePhase()
+{
+	for(var i=0; i<3; i++)
+
+	{
+		console.log("Oddler has encountered a " + EnemyCreature[0].Name + "!");
+		
+		while(EnemyCreature[0].Life>0 && Oddler.Life>0) //while creature is alive
+		{		
+			console.log("Oddler attacks for " + Attack(EnemyCreature[0],25,45,20) + " damage.");
+			
+			if(EnemyCreature[0].Life>0)
+			{
+				console.log(EnemyCreature[0].Name + " has " + EnemyCreature[0].Life + " life remaining.");
+				console.log(EnemyCreature[0].Name + " attacks for " + Attack(Oddler,10,20,30) + " damage.");
+				console.log("Oddler has " + Oddler.Life + " life remaining.");
+				if (Oddler.Life <=0)
+				{
+					OddlerWins = false;
+					return;
+				}
+				
+				if(Oddler.Life <=OddlerLifeThreshold)
+				{
+					if(WillMazyHeal())
+					{
+						console.log("Oddler's health is low!\nMazy heals Oddler for " + CastHealSpell(Oddler, healAmount)+ " life.");
+						console.log("Oddler has " + Oddler.Life + " life remaining.");
+					}
+					else {
+							console.log("Mazy was distracted and forgot to heal Oddler.");
+					}
+				}
+			}
+		}
+		console.log(EnemyCreature[0].Name + " has been defeated!");
+		EnemyCreature.shift();
+			console.log("\n\n");
+	}
+}
+        BuildEnemyArray();
+	BattlePhase();
+	console.log("\n\n");
+	ReportOutcome();
+	
